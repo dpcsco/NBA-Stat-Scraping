@@ -6,7 +6,7 @@ import time
 from io import StringIO
 
 
-url = "https://www.basketball-reference.com/boxscores/202410220BOS.html"
+url = "https://www.basketball-reference.com/boxscores/202410220LAL.html"
 
 
 
@@ -23,12 +23,17 @@ doc = BeautifulSoup(result.text, "html.parser")
 dfs = pd.read_html(StringIO(result.text))
 
 
-print(dfs[0])
-print(dfs[8])
+twolves = dfs[0]
 
+print(twolves.iloc[:, [0,19]])
+#print(dfs[8].iloc[[1,0]])
+
+
+
+
+#BRANCH_BY_BRANCH
 #test2 = doc.find("div", class_="table_container", id="div_box-NYK-game-basic")
 #test2 = doc.find_all("tr")
-
 #test3 = test2.find("table")
 
 #DATAFRAMES
