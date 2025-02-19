@@ -11,15 +11,15 @@ months = ["https://www.basketball-reference.com/leagues/NBA_2025_games-october.h
           "https://www.basketball-reference.com/leagues/NBA_2025_games-december.html",
           "https://www.basketball-reference.com/leagues/NBA_2025_games-january.html",
           "https://www.basketball-reference.com/leagues/NBA_2025_games-february.html"
+          #Add additional months as needed
 ]
           
 base_url = "https://basketball-reference.com"
 
-all_bs_urls = []
-
-
 start_time = time.perf_counter()
 
+
+#BeautifulSoup scrapes the url for a given page and returns a list of Box Score elements
 def locate_box(url):
     result = requests.get(url)
     doc = BeautifulSoup(result.text, "html.parser")
@@ -30,16 +30,18 @@ def locate_box(url):
 
     return box_score_items
 
+#takes in a list of Box Score elements and makes a list of urls for each
 def create_urls(bs_items):
     month_urls = [base_url + element.parent.get('href') for element in bs_items]
     return month_urls
 
-def main():
+#creates a nested list of every month's list of urls
+def gen_list_links():
     all_bs_urls = [create_urls(locate_box(link)) for link in months]
-    print(all_bs_urls)
+    return all_bs_urls
 
 if __name__ == "__main__":
-    main()
+    print(gen_list_links())
 
 #TIME COUNT
 end_time = time.perf_counter()

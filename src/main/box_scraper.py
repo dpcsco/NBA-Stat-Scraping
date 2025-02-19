@@ -4,54 +4,43 @@ import re
 import pandas as pd
 import time
 from io import StringIO
+import box_score_links
+from requests_ratelimiter import LimiterSession
 
 
-url = "https://www.basketball-reference.com/boxscores/202410220LAL.html"
-
-
+#url = "https://www.basketball-reference.com/boxscores/202410220LAL.html"
 
 start_time = time.perf_counter()
 
-#dfs = pd.read_html("https://www.basketball-reference.com/boxscores/202410220BOS.html")
+session = LimiterSession(per_minute=10)
 
-#print(dfs[0])
+#takes in a url and uses pandas to read the html
 
+def read_box(url):
+    result = session.get(url)
+    dfs = pd.read_html(StringIO(result.text))
+    print(dfs[0])
+
+
+def main():
+    test_list = box_score_links.gen_list_links()
+
+    for month in test_list[0]:
+        #for element in month[:10]:
+        test_month = month[:5]
+        read_box(test_month)
+            #read_box(element)
+
+if __name__ == "__main__":
+    main()
+
+'''''
 result = requests.get(url)
-doc = BeautifulSoup(result.text, "html.parser")
-
-#test = doc.find_all("table")
 dfs = pd.read_html(StringIO(result.text))
+'''''
+#twolves = dfs[0]
 
-
-twolves = dfs[0]
-
-print(twolves.iloc[:, [0,19]])
-#print(dfs[8].iloc[[1,0]])
-
-
-
-
-#BRANCH_BY_BRANCH
-#test2 = doc.find("div", class_="table_container", id="div_box-NYK-game-basic")
-#test2 = doc.find_all("tr")
-#test3 = test2.find("table")
-
-#DATAFRAMES
-#df = pd.DataFrame(test3)
-#print(df)
-
-
-#TESTS
-#test3 = test2.find("tbody")
-#test4 = test3.find_all("tr")
-
-
-#PRINTLINES
-#print(len(test3))
-#print(test2)
-#print(test4[0].prettify())
-#print(test4[1].prettify())
-
+#print(twolves.iloc[:, [0,19]])
 
 end_time = time.perf_counter()
 
